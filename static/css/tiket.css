@@ -1,0 +1,270 @@
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Inter', sans-serif;
+min-height: 100vh;
+background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0d1b3e 100%);
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 20px;
+}
+
+.ticket-container {
+width: 100%;
+max-width: 450px;
+animation: pop-in 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes pop-in {
+0% {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+50% {
+    transform: scale(1.02);
+}
+
+100% {
+    opacity: 1;
+    transform: scale(1);
+}
+}
+
+.ticket-card {
+background: rgba(255, 255, 255, 0.06);
+backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 24px;
+padding: 45px 40px;
+text-align: center;
+position: relative;
+overflow: hidden;
+}
+
+.ticket-card::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 4px;
+background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
+}
+
+.success-icon {
+width: 80px;
+height: 80px;
+background: linear-gradient(135deg, #10b981, #34d399);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 0 auto 20px;
+font-size: 2.5rem;
+animation: bounce-in 0.8s ease 0.3s both;
+}
+
+@keyframes bounce-in {
+0% {
+    transform: scale(0);
+}
+
+50% {
+    transform: scale(1.2);
+}
+
+100% {
+    transform: scale(1);
+}
+}
+
+.ticket-card h1 {
+color: #34d399;
+font-size: 1.3rem;
+font-weight: 700;
+margin-bottom: 5px;
+}
+
+.ticket-card .subtitle {
+color: rgba(255, 255, 255, 0.4);
+font-size: 0.85rem;
+margin-bottom: 30px;
+}
+
+.queue-number-box {
+background: rgba(52, 211, 153, 0.1);
+border: 2px solid rgba(52, 211, 153, 0.3);
+border-radius: 20px;
+padding: 30px;
+margin-bottom: 30px;
+}
+
+.queue-number-label {
+font-size: 0.8rem;
+text-transform: uppercase;
+letter-spacing: 3px;
+color: rgba(255, 255, 255, 0.5);
+font-weight: 600;
+margin-bottom: 8px;
+}
+
+.queue-number {
+font-family: 'JetBrains Mono', monospace;
+font-size: 6rem;
+font-weight: 900;
+color: #34d399;
+line-height: 1;
+text-shadow: 0 0 40px rgba(52, 211, 153, 0.3);
+}
+
+.ticket-info {
+text-align: left;
+margin-bottom: 25px;
+}
+
+.ticket-info .info-row {
+display: flex;
+justify-content: space-between;
+padding: 10px 0;
+border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ticket-info .info-row:last-child {
+border-bottom: none;
+}
+
+.info-label {
+color: rgba(255, 255, 255, 0.4);
+font-size: 0.85rem;
+}
+
+.info-value {
+color: #ffffff;
+font-size: 0.85rem;
+font-weight: 600;
+}
+
+.ticket-notice {
+background: rgba(251, 191, 36, 0.1);
+border: 1px solid rgba(251, 191, 36, 0.2);
+border-radius: 14px;
+padding: 16px;
+margin-bottom: 25px;
+}
+
+.ticket-notice p {
+color: rgba(255, 255, 255, 0.6);
+font-size: 0.8rem;
+line-height: 1.6;
+}
+
+.ticket-actions {
+display: flex;
+gap: 12px;
+}
+
+.btn {
+flex: 1;
+padding: 14px;
+border: none;
+border-radius: 14px;
+font-family: 'Inter', sans-serif;
+font-size: 0.85rem;
+font-weight: 700;
+cursor: pointer;
+transition: all 0.3s ease;
+text-decoration: none;
+text-align: center;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+}
+
+.btn-primary {
+background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+color: white;
+}
+
+.btn-primary:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
+.btn-secondary {
+background: rgba(255, 255, 255, 0.06);
+border: 1px solid rgba(255, 255, 255, 0.1);
+color: rgba(255, 255, 255, 0.7);
+}
+
+.btn-secondary:hover {
+background: rgba(255, 255, 255, 0.1);
+color: #ffffff;
+}
+
+@media print {
+body {
+    background: white;
+}
+
+.ticket-card {
+    background: white;
+    border: 2px solid #333;
+    color: #333;
+    box-shadow: none;
+    backdrop-filter: none;
+}
+
+.ticket-card h1 {
+    color: #10b981;
+}
+
+.ticket-card .subtitle {
+    color: #666;
+}
+
+.queue-number {
+    color: #10b981;
+    text-shadow: none;
+}
+
+.queue-number-box {
+    border-color: #10b981;
+    background: #f0fdf4;
+}
+
+.queue-number-label {
+    color: #666;
+}
+
+.info-label {
+    color: #666;
+}
+
+.info-value {
+    color: #333;
+}
+
+.ticket-notice {
+    background: #fffbeb;
+    border-color: #f59e0b;
+}
+
+.ticket-notice p {
+    color: #666;
+}
+
+.ticket-actions {
+    display: none;
+}
+
+.success-icon {
+    background: #10b981;
+}
+}
