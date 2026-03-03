@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antrian Wawancara - Display</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 30%, #0d1b3e 60%, #0a0e27 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(99, 179, 237, 0.15);
+            animation: float-particle 20s infinite;
+        }
+
+        .particle:nth-child(1) { width: 300px; height: 300px; top: -100px; left: -50px; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 200px; height: 200px; top: 50%; right: -80px; animation-delay: -5s; background: rgba(129, 140, 248, 0.1); }
+        .particle:nth-child(3) { width: 150px; height: 150px; bottom: -50px; left: 30%; animation-delay: -10s; background: rgba(52, 211, 153, 0.1); }
+        .particle:nth-child(4) { width: 250px; height: 250px; top: 20%; left: 60%; animation-delay: -15s; background: rgba(251, 191, 36, 0.08); }
+
+        @keyframes float-particle {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            25% { transform: translate(30px, -40px) scale(1.1); opacity: 0.5; }
+            50% { transform: translate(-20px, 20px) scale(0.9); opacity: 0.4; }
+            75% { transform: translate(40px, 30px) scale(1.05); opacity: 0.3; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 30px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 15px 0;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .header .subtitle {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 5px;
+            font-weight: 300;
+        }
+
+        .clock {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: right;
+        }
+
+        .clock .time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #60a5fa;
+        }
+
+        .clock .date {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 25px;
+            margin-top: 15px;
+            min-height: 0;
+        }
+
+        /* Loket Grid */
+        .loket-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .loket-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .loket-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .loket-card:nth-child(1)::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .loket-card:nth-child(2)::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+        .loket-card:nth-child(3)::before { background: linear-gradient(90deg, #10b981, #34d399); }
+        .loket-card:nth-child(4)::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .loket-card:nth-child(5)::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+        .loket-card.active {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(96, 165, 250, 0.3);
+            box-shadow: 0 0 40px rgba(96, 165, 250, 0.1);
+        }
+
+        .loket-card.calling {
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(96, 165, 250, 0.1); }
+            50% { box-shadow: 0 0 50px rgba(96, 165, 250, 0.3), 0 0 80px rgba(96, 165, 250, 0.1); }
+        }
+
+        .loket-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .loket-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .loket-card:nth-child(1) .loket-number { color: #60a5fa; }
+        .loket-card:nth-child(2) .loket-number { color: #a78bfa; }
+        .loket-card:nth-child(3) .loket-number { color: #34d399; }
+        .loket-card:nth-child(4) .loket-number { color: #fbbf24; }
+        .loket-card:nth-child(5) .loket-number { color: #f87171; }
+
+        .loket-nama {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+            max-width: 180px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .loket-number.empty {
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 3rem;
+        }
+
+        /* Sixth card - stats summary */
+        .stats-summary-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .stats-summary-card .stat-item {
+            text-align: center;
+        }
+
+        .stats-summary-card .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #60a5fa;
+        }
+
+        .stats-summary-card .stat-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Sidebar - Waiting Queue */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sidebar-header {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 18px;
+            text-align: center;
+        }
+
+        .sidebar-header h2 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 5px;
+        }
+
+        .waiting-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fbbf24;
+        }
+
+        .waiting-list {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 15px;
+            overflow-y: auto;
+            min-height: 0;
+        }
+
+        .waiting-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .waiting-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .waiting-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .waiting-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            animation: slide-in 0.4s ease;
+        }
+
+        @keyframes slide-in {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .waiting-item:first-child {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: rgba(251, 191, 36, 0.2);
+        }
+
+        .waiting-item .w-no {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #60a5fa;
+            min-width: 45px;
+        }
+
+        .waiting-item:first-child .w-no {
+            color: #fbbf24;
+        }
+
+        .waiting-item .w-nama {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .waiting-empty {
+            text-align: center;
+            padding: 40px 0;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.85rem;
+        }
+
+        /* Notification Banner */
+        .notification {
+            position: fixed;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(52, 211, 153, 0.95));
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px 50px;
+            text-align: center;
+            z-index: 100;
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.3);
+            transition: top 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .notification.show {
+            top: 30px;
+        }
+
+        .notification .notif-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            opacity: 0.8;
+        }
+
+        .notification .notif-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .notification .notif-loket {
+            font-size: 1.1rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0 5px;
+        }
+
+        .footer-bar .running-text {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.3);
+            animation: marquee 20s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.3);
+            text-decoration: none;
+            font-size: 0.75rem;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+            .loket-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .loket-number {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .loket-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .header h1 { font-size: 1.5rem; }
+            .clock { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+</div>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1>📋 Sistem Antrian Wawancara</h1>
+        <p class="subtitle">Silakan perhatikan layar untuk nomor antrian Anda</p>
+        <div class="clock">
+            <div class="time" id="clock-time">--:--:--</div>
+            <div class="date" id="clock-date">--</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Loket Grid -->
+        <div class="loket-grid">
+            <div class="loket-card" id="card-1">
+                <div class="loket-label">Loket 1</div>
+                <div class="loket-number empty" id="loket-1">-</div>
+                <div class="loket-nama" id="nama-1"></div>
+            </div>
+            <div class="loket-card" id="card-2">
+                <div class="loket-label">Loket 2</div>
+                <div class="loket-number empty" id="loket-2">-</div>
+                <div class="loket-nama" id="nama-2"></div>
+            </div>
+            <div class="loket-card" id="card-3">
+                <div class="loket-label">Loket 3</div>
+                <div class="loket-number empty" id="loket-3">-</div>
+                <div class="loket-nama" id="nama-3"></div>
+            </div>
+            <div class="loket-card" id="card-4">
+                <div class="loket-label">Loket 4</div>
+                <div class="loket-number empty" id="loket-4">-</div>
+                <div class="loket-nama" id="nama-4"></div>
+            </div>
+            <div class="loket-card" id="card-5">
+                <div class="loket-label">Loket 5</div>
+                <div class="loket-number empty" id="loket-5">-</div>
+                <div class="loket-nama" id="nama-5"></div>
+            </div>
+            <!-- Stats Summary -->
+            <div class="stats-summary-card">
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-menunggu">0</div>
+                    <div class="stat-label">Menunggu</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-selesai" style="color: #34d399;">0</div>
+                    <div class="stat-label">Selesai</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Antrian Menunggu</h2>
+                <div class="waiting-count" id="total-waiting">0</div>
+            </div>
+            <div class="waiting-list" id="waiting-list">
+                <div class="waiting-empty">Belum ada antrian</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-bar">
+        <div style="overflow: hidden; flex: 1;">
+            <div class="running-text">
+                🎯 Silakan menunggu nomor antrian Anda dipanggil oleh pewawancara • Pastikan Anda siap saat nomor dipanggil • Terima kasih atas kesabaran Anda
+            </div>
+        </div>
+        <div class="nav-links">
+            <a href="/absensi">📝 Daftar</a>
+            <a href="/login">🔐 Login</a>
+        </div>
+    </div>
+</div>
+
+<!-- Notification -->
+<div class="notification" id="notification">
+    <div class="notif-label">Nomor Antrian</div>
+    <div class="notif-number" id="notif-number">-</div>
+    <div class="notif-loket" id="notif-loket">Menuju Loket -</div>
+</div>
+
+<!-- Sound effect (optional bell) -->
+<audio id="bell-sound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRiQDAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQADAAB/f39/f4B+fXx8fXx7fH19fX9/gIGCgoKDg4OCgoKBgH9+fXx7enl5eXl5ent8fn+BgoSFhoeIiIiHhoWEgoF/fXt5d3Z1dHR0dXZ3eXt9gIKEhomKi4yMjIuKiYeFg4B+e3l3dXRzc3N0dXZ4ent+gYOGiImLjI2NjYyLiYeGhIGAfnt5d3V0c3J0dXZ4e32AgoWHiYuMjo6OjYyLiYeEgoB9e3h2dHNycnN0dnd5fH6BhIaJi42Oj4+OjYuJh4WCgH16eHVzc3FvcXN1eHp8gIOGiYuOj5CQj46Mi4mGhIGAfHl3dHJxcXFzc3" type="audio/wav">
+</audio>
+
+<script>
+    let lastCalledNo = null;
+    let lastCalledLoket = null;
+
+    // Clock
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const mins = String(now.getMinutes()).padStart(2, '0');
+        const secs = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('clock-time').textContent = `${hours}:${mins}:${secs}`;
+
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        document.getElementById('clock-date').textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Show notification
+    function showNotification(no, loket, nama) {
+        const notif = document.getElementById('notification');
+        document.getElementById('notif-number').textContent = no;
+        document.getElementById('notif-loket').textContent = `Menuju Loket ${loket}`;
+        notif.classList.add('show');
+
+        setTimeout(() => {
+            notif.classList.remove('show');
+        }, 6000);
+    }
+
+    // Load data
+    async function loadData() {
+        try {
+            const res = await fetch('/api/data-antrian');
+            const data = await res.json();
+
+            // Update loket cards
+            for (let i = 1; i <= 5; i++) {
+                const loketData = data.loket[`loket${i}`];
+                const numEl = document.getElementById(`loket-${i}`);
+                const namaEl = document.getElementById(`nama-${i}`);
+                const cardEl = document.getElementById(`card-${i}`);
+
+                if (loketData.no !== '-') {
+                    numEl.textContent = loketData.no;
+                    numEl.classList.remove('empty');
+                    namaEl.textContent = loketData.nama;
+                    cardEl.classList.add('active');
+                } else {
+                    numEl.textContent = '-';
+                    numEl.classList.add('empty');
+                    namaEl.textContent = '';
+                    cardEl.classList.remove('active', 'calling');
+                }
+            }
+
+            // Stats
+            document.getElementById('stat-menunggu').textContent = data.total_menunggu;
+            document.getElementById('stat-selesai').textContent = data.total_selesai;
+            document.getElementById('total-waiting').textContent = data.total_menunggu;
+
+            // Waiting list
+            const waitingEl = document.getElementById('waiting-list');
+            if (data.menunggu.length > 0) {
+                waitingEl.innerHTML = data.menunggu.map((item, idx) => `
+                    <div class="waiting-item" style="animation-delay: ${idx * 0.05}s">
+                        <span class="w-no">${item.no}</span>
+                        <span class="w-nama">${item.nama}</span>
+                    </div>
+                `).join('');
+            } else {
+                waitingEl.innerHTML = '<div class="waiting-empty">✅ Tidak ada antrian menunggu</div>';
+            }
+
+            // Check for new call notification
+            if (data.last_called) {
+                const newNo = data.last_called.no;
+                const newLoket = data.last_called.loket;
+                if (newNo !== lastCalledNo || newLoket !== lastCalledLoket) {
+                    lastCalledNo = newNo;
+                    lastCalledLoket = newLoket;
+                    showNotification(newNo, newLoket, data.last_called.nama);
+
+                    // Add calling animation to the card
+                    const cardEl = document.getElementById(`card-${newLoket}`);
+                    if (cardEl) {
+                        cardEl.classList.add('calling');
+                        setTimeout(() => cardEl.classList.remove('calling'), 10000);
+                    }
+                }
+            }
+        } catch (err) {
+            console.error('Error loading data:', err);
+        }
+    }
+
+    // Poll every 2 seconds
+    setInterval(loadData, 2000);
+    loadData();
+</script>
+
+</body>
+</html>
