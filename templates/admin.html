@@ -51,48 +51,8 @@
         </div>
     </div>
 
-    <!-- Loket Overview -->
+    <!-- Loket Overview (dynamically generated) -->
     <div class="loket-overview" id="loket-overview">
-        <div class="loket-card" id="lcard-1">
-            <div class="loket-title">Loket 1</div>
-            <div class="loket-current-no" id="lno-1">-</div>
-            <div class="loket-current-nama" id="lnama-1"></div>
-            <div class="loket-stats">
-                <span class="loket-stat">Selesai: <span id="ls-1">0</span></span>
-            </div>
-        </div>
-        <div class="loket-card" id="lcard-2">
-            <div class="loket-title">Loket 2</div>
-            <div class="loket-current-no" id="lno-2">-</div>
-            <div class="loket-current-nama" id="lnama-2"></div>
-            <div class="loket-stats">
-                <span class="loket-stat">Selesai: <span id="ls-2">0</span></span>
-            </div>
-        </div>
-        <div class="loket-card" id="lcard-3">
-            <div class="loket-title">Loket 3</div>
-            <div class="loket-current-no" id="lno-3">-</div>
-            <div class="loket-current-nama" id="lnama-3"></div>
-            <div class="loket-stats">
-                <span class="loket-stat">Selesai: <span id="ls-3">0</span></span>
-            </div>
-        </div>
-        <div class="loket-card" id="lcard-4">
-            <div class="loket-title">Loket 4</div>
-            <div class="loket-current-no" id="lno-4">-</div>
-            <div class="loket-current-nama" id="lnama-4"></div>
-            <div class="loket-stats">
-                <span class="loket-stat">Selesai: <span id="ls-4">0</span></span>
-            </div>
-        </div>
-        <div class="loket-card" id="lcard-5">
-            <div class="loket-title">Loket 5</div>
-            <div class="loket-current-no" id="lno-5">-</div>
-            <div class="loket-current-nama" id="lnama-5"></div>
-            <div class="loket-stats">
-                <span class="loket-stat">Selesai: <span id="ls-5">0</span></span>
-            </div>
-        </div>
     </div>
 
     <!-- Data Table -->
@@ -115,12 +75,11 @@
                         <th>Loket</th>
                         <th>Waktu Daftar</th>
                         <th>Waktu Dipanggil</th>
-                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="table-body">
                     <tr>
-                        <td colspan="9" class="table-empty">Memuat data...</td>
+                        <td colspan="8" class="table-empty">Memuat data...</td>
                     </tr>
                 </tbody>
             </table>
@@ -173,7 +132,7 @@
         function renderTable(data) {
             const tbody = document.getElementById('table-body');
             if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="table-empty">Belum ada data antrian</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="table-empty">Belum ada data antrian</td></tr>';
                 return;
             }
 
@@ -187,13 +146,6 @@
                 <td>${row.loket || '-'}</td>
                 <td>${row.waktu_daftar || '-'}</td>
                 <td>${row.waktu_dipanggil || '-'}</td>
-                <td>
-                    <div class="action-links">
-                        ${row.status === 'Dipanggil' ?
-                    `<button class="action-link complete" onclick="updateStatus(${row.id}, 'Selesai')">✅ Selesai</button>` : ''
-                }
-                    </div>
-                </td>
             </tr>
         `).join('');
         }
@@ -213,6 +165,28 @@
             renderTable(filtered);
         }
 
+        function renderLoketOverview(loketStats) {
+            const container = document.getElementById('loket-overview');
+            let html = '';
+            for (let i = 1; i <= 25; i++) {
+                const ls = loketStats[`loket${i}`];
+                const isActive = ls && ls.current;
+                const currentNo = isActive ? ls.current.no : '-';
+                const currentNama = isActive ? ls.current.nama : '';
+                const selesai = ls ? ls.selesai : 0;
+                html += `
+                <div class="loket-card${isActive ? ' active' : ''}" id="lcard-${i}">
+                    <div class="loket-title">Loket ${i}</div>
+                    <div class="loket-current-no" id="lno-${i}">${currentNo}</div>
+                    <div class="loket-current-nama" id="lnama-${i}">${currentNama}</div>
+                    <div class="loket-stats">
+                        <span class="loket-stat">Selesai: <span id="ls-${i}">${selesai}</span></span>
+                    </div>
+                </div>`;
+            }
+            container.innerHTML = html;
+        }
+
         async function loadData() {
             try {
                 const res = await fetch('/api/admin-data');
@@ -227,24 +201,8 @@
                 document.getElementById('s-selesai').textContent = data.stats.selesai;
                 document.getElementById('s-dilewati').textContent = data.stats.dilewati;
 
-                // Loket overview
-                for (let i = 1; i <= 5; i++) {
-                    const ls = data.loket_stats[`loket${i}`];
-                    const card = document.getElementById(`lcard-${i}`);
-                    const noEl = document.getElementById(`lno-${i}`);
-                    const namaEl = document.getElementById(`lnama-${i}`);
-
-                    if (ls.current) {
-                        noEl.textContent = ls.current.no;
-                        namaEl.textContent = ls.current.nama;
-                        card.classList.add('active');
-                    } else {
-                        noEl.textContent = '-';
-                        namaEl.textContent = '';
-                        card.classList.remove('active');
-                    }
-                    document.getElementById(`ls-${i}`).textContent = ls.selesai;
-                }
+                // Loket overview (dynamic 25 lokets)
+                renderLoketOverview(data.loket_stats);
 
                 // Table
                 filterTable();
@@ -253,18 +211,7 @@
             }
         }
 
-        async function updateStatus(id, status) {
-            try {
-                const res = await fetch(`/admin/update/${id}/${status}`, { method: 'POST' });
-                const data = await res.json();
-                if (data.success) {
-                    showToast(`✅ Status diperbarui ke ${status}`);
-                    loadData();
-                }
-            } catch (err) {
-                showToast('Gagal mengupdate', true);
-            }
-        }
+
 
         async function resetAntrian() {
             try {

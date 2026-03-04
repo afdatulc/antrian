@@ -67,6 +67,14 @@ def init_db():
         )
     """)
 
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS active_sessions (
+            loket INTEGER PRIMARY KEY,
+            session_id TEXT NOT NULL,
+            login_time DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
     # Check if we need to seed
     cursor.execute("SELECT COUNT(*) FROM users")
     if cursor.fetchone()[0] == 0:
@@ -75,8 +83,8 @@ def init_db():
             "INSERT INTO users (username, password_hash, role, loket, nama_display) VALUES (?, ?, ?, ?, ?)",
             ("admin", generate_password_hash("admin123"), "admin", None, "Administrator")
         )
-        # Seed 5 interviewers
-        for i in range(1, 6):
+        # Seed 25 interviewers
+        for i in range(1, 26):
             cursor.execute(
                 "INSERT INTO users (username, password_hash, role, loket, nama_display) VALUES (?, ?, ?, ?, ?)",
                 (f"loket{i}", generate_password_hash("123"), "interviewer", i, f"Pewawancara Loket {i}")
@@ -204,7 +212,7 @@ def api_data_antrian():
     result = {"loket": {}, "menunggu": [], "last_called": None}
 
     # Data per loket (active call)
-    for i in range(1, 6):
+    for i in range(1, 26):
         cursor.execute(
             "SELECT no_antrian, nama FROM antrian WHERE loket=? AND status='Dipanggil' ORDER BY id DESC LIMIT 1",
             (i,)
@@ -300,9 +308,28 @@ def login():
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM users WHERE username=?", (user,))
         data = cursor.fetchone()
-        conn.close()
 
         if data and check_password_hash(data["password_hash"], pw):
+            # Check if this loket is already logged in by another session
+            if data["role"] == "interviewer" and data["loket"]:
+                cursor.execute("SELECT * FROM active_sessions WHERE loket=?", (data["loket"],))
+                active = cursor.fetchone()
+                if active:
+                    conn.close()
+                    error = f"Loket {data['loket']} sudah digunakan oleh user lain. Silakan logout terlebih dahulu."
+                    return render_template("login.html", error=error)
+
+                # Register this session as active
+                import uuid
+                session_id = str(uuid.uuid4())
+                cursor.execute(
+                    "INSERT INTO active_sessions (loket, session_id, login_time) VALUES (?, ?, ?)",
+                    (data["loket"], session_id, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                )
+                conn.commit()
+                session["session_id"] = session_id
+
+            conn.close()
             session["role"] = data["role"]
             session["loket"] = data["loket"]
             session["user"] = user
@@ -311,6 +338,8 @@ def login():
                 return redirect("/admin")
             else:
                 return redirect("/interviewer")
+        else:
+            conn.close()
         error = "Username atau password salah!"
 
     return render_template("login.html", error=error)
@@ -318,6 +347,18 @@ def login():
 
 @app.route("/logout")
 def logout():
+    # Remove active session for this loket
+    loket = session.get("loket")
+    session_id = session.get("session_id")
+    if loket and session_id:
+        try:
+            conn = get_db()
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM active_sessions WHERE loket=? AND session_id=?", (loket, session_id))
+            conn.commit()
+            conn.close()
+        except Exception:
+            pass
     session.clear()
     return redirect("/login")
 
@@ -446,7 +487,7 @@ def api_admin_data():
 
     # Per loket stats
     loket_stats = {}
-    for i in range(1, 6):
+    for i in range(1, 26):
         cursor.execute("SELECT COUNT(*) FROM antrian WHERE loket=? AND status='Selesai'", (i,))
         s = cursor.fetchone()[0]
         cursor.execute("SELECT COUNT(*) FROM antrian WHERE loket=? AND status='Dipanggil'", (i,))
@@ -529,6 +570,7 @@ def admin_reset():
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM antrian")
+    cursor.execute("DELETE FROM active_sessions")
     conn.commit()
     conn.close()
     return jsonify({"success": True})

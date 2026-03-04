@@ -1,213 +1,212 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Antrian Wawancara - Display</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/display.css') }}">
 </head>
+
 <body>
 
-<div class="bg-particles">
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-</div>
+    <div class="bg-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
 
-<div class="container">
-    <!-- Header -->
-    <div class="header">
-        <h1>📋 Sistem Antrian Wawancara</h1>
-        <p class="subtitle">Silakan perhatikan layar untuk nomor antrian Anda</p>
-        <div class="clock">
-            <div class="time" id="clock-time">--:--:--</div>
-            <div class="date" id="clock-date">--</div>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📋 Sistem Antrian Wawancara</h1>
+            <p class="subtitle">Silakan perhatikan layar untuk nomor antrian Anda</p>
+            <div class="clock">
+                <div class="time" id="clock-time">--:--:--</div>
+                <div class="date" id="clock-date">--</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Loket Grid (dynamically generated) -->
+            <div class="loket-grid" id="loket-grid">
+                <!-- Stats Summary -->
+                <div class="stats-summary-card">
+                    <div class="stat-item">
+                        <div class="stat-value" id="stat-menunggu">0</div>
+                        <div class="stat-label">Menunggu</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="stat-selesai" style="color: #34d399;">0</div>
+                        <div class="stat-label">Selesai</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h2>Antrian Menunggu</h2>
+                    <div class="waiting-count" id="total-waiting">0</div>
+                </div>
+                <div class="waiting-list" id="waiting-list">
+                    <div class="waiting-empty">Belum ada antrian</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-bar">
+            <div style="overflow: hidden; flex: 1;">
+                <div class="running-text">
+                    🎯 Silakan menunggu nomor antrian Anda dipanggil oleh pewawancara • Pastikan Anda siap saat nomor
+                    dipanggil • Terima kasih atas kesabaran Anda
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="/absensi">📝 Daftar</a>
+                <a href="/login">🔐 Login</a>
+            </div>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Loket Grid -->
-        <div class="loket-grid">
-            <div class="loket-card" id="card-1">
-                <div class="loket-label">Loket 1</div>
-                <div class="loket-number empty" id="loket-1">-</div>
-                <div class="loket-nama" id="nama-1"></div>
-            </div>
-            <div class="loket-card" id="card-2">
-                <div class="loket-label">Loket 2</div>
-                <div class="loket-number empty" id="loket-2">-</div>
-                <div class="loket-nama" id="nama-2"></div>
-            </div>
-            <div class="loket-card" id="card-3">
-                <div class="loket-label">Loket 3</div>
-                <div class="loket-number empty" id="loket-3">-</div>
-                <div class="loket-nama" id="nama-3"></div>
-            </div>
-            <div class="loket-card" id="card-4">
-                <div class="loket-label">Loket 4</div>
-                <div class="loket-number empty" id="loket-4">-</div>
-                <div class="loket-nama" id="nama-4"></div>
-            </div>
-            <div class="loket-card" id="card-5">
-                <div class="loket-label">Loket 5</div>
-                <div class="loket-number empty" id="loket-5">-</div>
-                <div class="loket-nama" id="nama-5"></div>
-            </div>
-            <!-- Stats Summary -->
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notif-label">Nomor Antrian</div>
+        <div class="notif-number" id="notif-number">-</div>
+        <div class="notif-loket" id="notif-loket">Menuju Loket -</div>
+    </div>
+
+    <!-- Sound effect (optional bell) -->
+    <audio id="bell-sound" preload="auto">
+        <source
+            src="data:audio/wav;base64,UklGRiQDAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQADAAB/f39/f4B+fXx8fXx7fH19fX9/gIGCgoKDg4OCgoKBgH9+fXx7enl5eXl5ent8fn+BgoSFhoeIiIiHhoWEgoF/fXt5d3Z1dHR0dXZ3eXt9gIKEhomKi4yMjIuKiYeFg4B+e3l3dXRzc3N0dXZ4ent+gYOGiImLjI2NjYyLiYeGhIGAfnt5d3V0c3J0dXZ4e32AgoWHiYuMjo6OjYyLiYeEgoB9e3h2dHNycnN0dnd5fH6BhIaJi42Oj4+OjYuJh4WCgH16eHVzc3FvcXN1eHp8gIOGiYuOj5CQj46Mi4mGhIGAfHl3dHJxcXFzc3"
+            type="audio/wav">
+    </audio>
+
+    <script>
+        let lastCalledNo = null;
+        let lastCalledLoket = null;
+
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const mins = String(now.getMinutes()).padStart(2, '0');
+            const secs = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock-time').textContent = `${hours}:${mins}:${secs}`;
+
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            document.getElementById('clock-date').textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Show notification
+        function showNotification(no, loket, nama) {
+            const notif = document.getElementById('notification');
+            document.getElementById('notif-number').textContent = no;
+            document.getElementById('notif-loket').textContent = `Menuju Loket ${loket}`;
+            notif.classList.add('show');
+
+            setTimeout(() => {
+                notif.classList.remove('show');
+            }, 6000);
+        }
+
+        // Render loket cards dynamically
+        function renderLoketCards(loketData) {
+            const grid = document.getElementById('loket-grid');
+            let html = '';
+            for (let i = 1; i <= 25; i++) {
+                const ld = loketData[`loket${i}`];
+                const hasData = ld && ld.no !== '-';
+                const activeClass = hasData ? ' active' : '';
+                const emptyClass = hasData ? '' : ' empty';
+                const no = hasData ? ld.no : '-';
+                const nama = hasData ? ld.nama : '';
+                html += `
+            <div class="loket-card${activeClass}" id="card-${i}">
+                <div class="loket-label">Loket ${i}</div>
+                <div class="loket-number${emptyClass}" id="loket-${i}">${no}</div>
+                <div class="loket-nama" id="nama-${i}">${nama}</div>
+            </div>`;
+            }
+            // Add stats summary card
+            html += `
             <div class="stats-summary-card">
                 <div class="stat-item">
-                    <div class="stat-value" id="stat-menunggu">0</div>
+                    <div class="stat-value" id="stat-menunggu">${document.getElementById('stat-menunggu')?.textContent || '0'}</div>
                     <div class="stat-label">Menunggu</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value" id="stat-selesai" style="color: #34d399;">0</div>
+                    <div class="stat-value" id="stat-selesai" style="color: #34d399;">${document.getElementById('stat-selesai')?.textContent || '0'}</div>
                     <div class="stat-label">Selesai</div>
                 </div>
-            </div>
-        </div>
+            </div>`;
+            grid.innerHTML = html;
+        }
 
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h2>Antrian Menunggu</h2>
-                <div class="waiting-count" id="total-waiting">0</div>
-            </div>
-            <div class="waiting-list" id="waiting-list">
-                <div class="waiting-empty">Belum ada antrian</div>
-            </div>
-        </div>
-    </div>
+        // Load data
+        async function loadData() {
+            try {
+                const res = await fetch('/api/data-antrian');
+                const data = await res.json();
 
-    <!-- Footer -->
-    <div class="footer-bar">
-        <div style="overflow: hidden; flex: 1;">
-            <div class="running-text">
-                🎯 Silakan menunggu nomor antrian Anda dipanggil oleh pewawancara • Pastikan Anda siap saat nomor dipanggil • Terima kasih atas kesabaran Anda
-            </div>
-        </div>
-        <div class="nav-links">
-            <a href="/absensi">📝 Daftar</a>
-            <a href="/login">🔐 Login</a>
-        </div>
-    </div>
-</div>
+                // Render loket cards dynamically
+                renderLoketCards(data.loket);
 
-<!-- Notification -->
-<div class="notification" id="notification">
-    <div class="notif-label">Nomor Antrian</div>
-    <div class="notif-number" id="notif-number">-</div>
-    <div class="notif-loket" id="notif-loket">Menuju Loket -</div>
-</div>
+                // Stats
+                document.getElementById('stat-menunggu').textContent = data.total_menunggu;
+                document.getElementById('stat-selesai').textContent = data.total_selesai;
+                document.getElementById('total-waiting').textContent = data.total_menunggu;
 
-<!-- Sound effect (optional bell) -->
-<audio id="bell-sound" preload="auto">
-    <source src="data:audio/wav;base64,UklGRiQDAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQADAAB/f39/f4B+fXx8fXx7fH19fX9/gIGCgoKDg4OCgoKBgH9+fXx7enl5eXl5ent8fn+BgoSFhoeIiIiHhoWEgoF/fXt5d3Z1dHR0dXZ3eXt9gIKEhomKi4yMjIuKiYeFg4B+e3l3dXRzc3N0dXZ4ent+gYOGiImLjI2NjYyLiYeGhIGAfnt5d3V0c3J0dXZ4e32AgoWHiYuMjo6OjYyLiYeEgoB9e3h2dHNycnN0dnd5fH6BhIaJi42Oj4+OjYuJh4WCgH16eHVzc3FvcXN1eHp8gIOGiYuOj5CQj46Mi4mGhIGAfHl3dHJxcXFzc3" type="audio/wav">
-</audio>
-
-<script>
-    let lastCalledNo = null;
-    let lastCalledLoket = null;
-
-    // Clock
-    function updateClock() {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const mins = String(now.getMinutes()).padStart(2, '0');
-        const secs = String(now.getSeconds()).padStart(2, '0');
-        document.getElementById('clock-time').textContent = `${hours}:${mins}:${secs}`;
-
-        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-        document.getElementById('clock-date').textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    // Show notification
-    function showNotification(no, loket, nama) {
-        const notif = document.getElementById('notification');
-        document.getElementById('notif-number').textContent = no;
-        document.getElementById('notif-loket').textContent = `Menuju Loket ${loket}`;
-        notif.classList.add('show');
-
-        setTimeout(() => {
-            notif.classList.remove('show');
-        }, 6000);
-    }
-
-    // Load data
-    async function loadData() {
-        try {
-            const res = await fetch('/api/data-antrian');
-            const data = await res.json();
-
-            // Update loket cards
-            for (let i = 1; i <= 5; i++) {
-                const loketData = data.loket[`loket${i}`];
-                const numEl = document.getElementById(`loket-${i}`);
-                const namaEl = document.getElementById(`nama-${i}`);
-                const cardEl = document.getElementById(`card-${i}`);
-
-                if (loketData.no !== '-') {
-                    numEl.textContent = loketData.no;
-                    numEl.classList.remove('empty');
-                    namaEl.textContent = loketData.nama;
-                    cardEl.classList.add('active');
-                } else {
-                    numEl.textContent = '-';
-                    numEl.classList.add('empty');
-                    namaEl.textContent = '';
-                    cardEl.classList.remove('active', 'calling');
-                }
-            }
-
-            // Stats
-            document.getElementById('stat-menunggu').textContent = data.total_menunggu;
-            document.getElementById('stat-selesai').textContent = data.total_selesai;
-            document.getElementById('total-waiting').textContent = data.total_menunggu;
-
-            // Waiting list
-            const waitingEl = document.getElementById('waiting-list');
-            if (data.menunggu.length > 0) {
-                waitingEl.innerHTML = data.menunggu.map((item, idx) => `
+                // Waiting list
+                const waitingEl = document.getElementById('waiting-list');
+                if (data.menunggu.length > 0) {
+                    waitingEl.innerHTML = data.menunggu.map((item, idx) => `
                     <div class="waiting-item" style="animation-delay: ${idx * 0.05}s">
                         <span class="w-no">${item.no}</span>
                         <span class="w-nama">${item.nama}</span>
                     </div>
                 `).join('');
-            } else {
-                waitingEl.innerHTML = '<div class="waiting-empty">✅ Tidak ada antrian menunggu</div>';
-            }
+                } else {
+                    waitingEl.innerHTML = '<div class="waiting-empty">✅ Tidak ada antrian menunggu</div>';
+                }
 
-            // Check for new call notification
-            if (data.last_called) {
-                const newNo = data.last_called.no;
-                const newLoket = data.last_called.loket;
-                if (newNo !== lastCalledNo || newLoket !== lastCalledLoket) {
-                    lastCalledNo = newNo;
-                    lastCalledLoket = newLoket;
-                    showNotification(newNo, newLoket, data.last_called.nama);
+                // Check for new call notification
+                if (data.last_called) {
+                    const newNo = data.last_called.no;
+                    const newLoket = data.last_called.loket;
+                    if (newNo !== lastCalledNo || newLoket !== lastCalledLoket) {
+                        lastCalledNo = newNo;
+                        lastCalledLoket = newLoket;
+                        showNotification(newNo, newLoket, data.last_called.nama);
 
-                    // Add calling animation to the card
-                    const cardEl = document.getElementById(`card-${newLoket}`);
-                    if (cardEl) {
-                        cardEl.classList.add('calling');
-                        setTimeout(() => cardEl.classList.remove('calling'), 10000);
+                        // Add calling animation to the card
+                        const cardEl = document.getElementById(`card-${newLoket}`);
+                        if (cardEl) {
+                            cardEl.classList.add('calling');
+                            setTimeout(() => cardEl.classList.remove('calling'), 10000);
+                        }
                     }
                 }
+            } catch (err) {
+                console.error('Error loading data:', err);
             }
-        } catch (err) {
-            console.error('Error loading data:', err);
         }
-    }
 
-    // Poll every 2 seconds
-    setInterval(loadData, 2000);
-    loadData();
-</script>
+        // Poll every 2 seconds
+        setInterval(loadData, 2000);
+        loadData();
+    </script>
 
 </body>
+
 </html>

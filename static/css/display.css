@@ -9,7 +9,7 @@ body {
     background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 30%, #0d1b3e 60%, #0a0e27 100%);
     color: #ffffff;
     min-height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 /* Animated background particles */
@@ -43,7 +43,7 @@ body {
 .container {
     position: relative;
     z-index: 1;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     padding: 20px 30px;
@@ -107,17 +107,16 @@ body {
 /* Loket Grid */
 .loket-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 18px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
 }
 
 .loket-card {
     background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    padding: 25px;
+    border-radius: 16px;
+    padding: 15px 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -134,14 +133,15 @@ body {
     left: 0;
     right: 0;
     height: 3px;
-    border-radius: 20px 20px 0 0;
+    border-radius: 16px 16px 0 0;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
 }
 
-.loket-card:nth-child(1)::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-.loket-card:nth-child(2)::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-.loket-card:nth-child(3)::before { background: linear-gradient(90deg, #10b981, #34d399); }
-.loket-card:nth-child(4)::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-.loket-card:nth-child(5)::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+.loket-card:nth-child(5n+1)::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.loket-card:nth-child(5n+2)::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+.loket-card:nth-child(5n+3)::before { background: linear-gradient(90deg, #10b981, #34d399); }
+.loket-card:nth-child(5n+4)::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.loket-card:nth-child(5n+5)::before { background: linear-gradient(90deg, #ef4444, #f87171); }
 
 .loket-card.active {
     background: rgba(255, 255, 255, 0.08);
@@ -169,18 +169,19 @@ body {
 
 .loket-number {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 4.5rem;
+    font-size: 2.5rem;
     font-weight: 800;
     line-height: 1;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
     transition: all 0.3s ease;
+    color: #60a5fa;
 }
 
-.loket-card:nth-child(1) .loket-number { color: #60a5fa; }
-.loket-card:nth-child(2) .loket-number { color: #a78bfa; }
-.loket-card:nth-child(3) .loket-number { color: #34d399; }
-.loket-card:nth-child(4) .loket-number { color: #fbbf24; }
-.loket-card:nth-child(5) .loket-number { color: #f87171; }
+.loket-card:nth-child(5n+1) .loket-number { color: #60a5fa; }
+.loket-card:nth-child(5n+2) .loket-number { color: #a78bfa; }
+.loket-card:nth-child(5n+3) .loket-number { color: #34d399; }
+.loket-card:nth-child(5n+4) .loket-number { color: #fbbf24; }
+.loket-card:nth-child(5n+5) .loket-number { color: #f87171; }
 
 .loket-nama {
     font-size: 0.8rem;
@@ -194,7 +195,7 @@ body {
 
 .loket-number.empty {
     color: rgba(255, 255, 255, 0.15);
-    font-size: 3rem;
+    font-size: 2rem;
 }
 
 /* Sixth card - stats summary */
@@ -415,7 +416,7 @@ body {
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
     .main-content {
         grid-template-columns: 1fr;
     }
@@ -423,17 +424,26 @@ body {
         display: none;
     }
     .loket-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(5, 1fr);
     }
     .loket-number {
-        font-size: 3rem;
+        font-size: 2rem;
     }
 }
 
 @media (max-width: 768px) {
     .loket-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
     .header h1 { font-size: 1.5rem; }
     .clock { display: none; }
+    .loket-number {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .loket-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
