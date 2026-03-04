@@ -60,7 +60,7 @@
         <div class="table-header">
             <h2>📋 Data Antrian</h2>
             <div class="search-box">
-                <input id="search-input" type="text" placeholder="Cari nama atau nomor..." oninput="filterTable()">
+                <input id="search-input" type="text" placeholder="Cari nama atau nomor..." oninput="debounceSearch()">
             </div>
         </div>
         <div class="table-scroll">
@@ -84,6 +84,8 @@
                 </tbody>
             </table>
         </div>
+        <!-- Pagination -->
+        <div class="pagination" id="pagination"></div>
     </div>
 
     <!-- Toast -->
@@ -102,7 +104,9 @@
     </div>
 
     <script>
-        let allData = [];
+        let currentPage = 1;
+        let searchTimeout = null;
+        let currentSearch = '';
 
         function showToast(msg, isError = false) {
             const toast = document.getElementById('toast');
@@ -150,19 +154,61 @@
         `).join('');
         }
 
-        function filterTable() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            if (!query) {
-                renderTable(allData);
+        function renderPagination(pagination) {
+            const container = document.getElementById('pagination');
+            if (!pagination || pagination.total_pages <= 1) {
+                container.innerHTML = '';
                 return;
             }
-            const filtered = allData.filter(row =>
-                row.nama.toLowerCase().includes(query) ||
-                String(row.no_antrian).includes(query) ||
-                (row.telepon || '').includes(query) ||
-                (row.email || '').toLowerCase().includes(query)
-            );
-            renderTable(filtered);
+
+            const { page, total_pages, total_items } = pagination;
+            let html = `<span class="page-info">Halaman ${page} dari ${total_pages} (${total_items} data)</span>`;
+            html += '<div class="page-buttons">';
+
+            // Previous button
+            if (page > 1) {
+                html += `<button class="page-btn" onclick="goToPage(${page - 1})">&laquo; Prev</button>`;
+            }
+
+            // Page numbers
+            let startPage = Math.max(1, page - 2);
+            let endPage = Math.min(total_pages, page + 2);
+
+            if (startPage > 1) {
+                html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+                if (startPage > 2) html += `<span class="page-dots">...</span>`;
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                html += `<button class="page-btn${i === page ? ' active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+            }
+
+            if (endPage < total_pages) {
+                if (endPage < total_pages - 1) html += `<span class="page-dots">...</span>`;
+                html += `<button class="page-btn" onclick="goToPage(${total_pages})">${total_pages}</button>`;
+            }
+
+            // Next button
+            if (page < total_pages) {
+                html += `<button class="page-btn" onclick="goToPage(${page + 1})">Next &raquo;</button>`;
+            }
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadData();
+        }
+
+        function debounceSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentSearch = document.getElementById('search-input').value.trim();
+                currentPage = 1; // Reset to page 1 on new search
+                loadData();
+            }, 400);
         }
 
         function renderLoketOverview(loketStats) {
@@ -189,10 +235,12 @@
 
         async function loadData() {
             try {
-                const res = await fetch('/api/admin-data');
+                let url = `/api/admin-data?page=${currentPage}&per_page=50`;
+                if (currentSearch) {
+                    url += `&search=${encodeURIComponent(currentSearch)}`;
+                }
+                const res = await fetch(url);
                 const data = await res.json();
-
-                allData = data.antrian;
 
                 // Stats
                 document.getElementById('s-total').textContent = data.stats.total;
@@ -205,13 +253,14 @@
                 renderLoketOverview(data.loket_stats);
 
                 // Table
-                filterTable();
+                renderTable(data.antrian);
+
+                // Pagination
+                renderPagination(data.pagination);
             } catch (err) {
                 console.error(err);
             }
         }
-
-
 
         async function resetAntrian() {
             try {
@@ -220,6 +269,9 @@
                 if (data.success) {
                     showToast('🗑️ Semua antrian telah direset');
                     hideResetModal();
+                    currentPage = 1;
+                    currentSearch = '';
+                    document.getElementById('search-input').value = '';
                     loadData();
                 }
             } catch (err) {
@@ -227,8 +279,8 @@
             }
         }
 
-        // Auto-refresh every 3 seconds
-        setInterval(loadData, 3000);
+        // Auto-refresh every 5 seconds (increased from 3s for better performance)
+        setInterval(loadData, 5000);
         loadData();
     </script>
 
