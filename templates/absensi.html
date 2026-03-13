@@ -4,11 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendaftaran & Absensi Wawancara</title>
+    <title>Pendaftaran & Presensi Wawancara</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/absensi.css') }}">
-    <link 
 </head>
 
 <body>
@@ -27,7 +26,7 @@
                     Silakan menunggu di ruangan hingga nomor Anda dipanggil oleh pewawancara.</p>
             </div>
 
-            <form method="post" action="/submit_absensi" id="absensi-form">
+            <form method="POST" action="/submit_absensi" id="absensi-form">
                 <div class="form-group">
                     <label>Nama Lengkap</label>
                     <div class="input-wrapper">
@@ -46,10 +45,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Alamat Email</label>
+                    <label>ID Sobat</label>
                     <div class="input-wrapper">
                         <span class="input-icon">✉️</span>
-                        <input type="email" name="email" placeholder="contoh@email.com" autocomplete="email">
+                        <input type="text" name="id_sobat" pattern="[0-9]+" inputmode="numeric" placeholder="35781234" autocomplete="off">
                     </div>
                 </div>
 

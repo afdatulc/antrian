@@ -10,28 +10,12 @@
         rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tiket.css') }}">
 </head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-<script>
-function downloadTicket() {
-    const ticketContainer = document.querySelector('.ticket-container');
-
-    html2canvas(ticketContainer, {
-        scale: 3,
-        backgroundColor: null
-    }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = "tiket_antrian_{{ no_antrian }}.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-    });
-}
-</script>
 <body>
 
     <div class="ticket-container">
         <div class="ticket-card">
-            <div class="success-icon">✅</div>
+            <div class="success-icon"><span style="display: inline-block; color: #ffffff;">✔</span></div>
             <h1>Pendaftaran Berhasil!</h1>
             <p class="subtitle">Simpan nomor antrian Anda</p>
 
@@ -51,10 +35,10 @@ function downloadTicket() {
                     <span class="info-value">{{ telepon }}</span>
                 </div>
                 {% endif %}
-                {% if email %}
+                {% if id_sobat %}
                 <div class="info-row">
-                    <span class="info-label">Email</span>
-                    <span class="info-value">{{ email }}</span>
+                    <span class="info-label">ID Sobat</span>
+                    <span class="info-value">{{ id_sobat }}</span>
                 </div>
                 {% endif %}
                 <div class="info-row">
@@ -69,22 +53,11 @@ function downloadTicket() {
             </div>
 
             <div class="ticket-actions">
-                <button class="btn btn-primary" id="btnCetak" onclick="cetakDanRedirect()" style="width:100%">🖨️ Cetak
-                    Tiket</button>
+                <button class="btn btn-primary" id="btnCetak" onclick="" style="width:100%">🖨️ Simpan Tiket</button>
             </div>
+            <a href="/display" class="back-link">← Kembali ke layar antrian</a>
         </div>
     </div>
-
-    <script>
-        function cetakDanRedirect() {
-            window.print();
-        }
-
-        // Redirect to display page after print dialog closes
-        window.onafterprint = function () {
-            window.location.href = '/display';
-        };
-    </script>
 
 </body>
 

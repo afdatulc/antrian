@@ -7,8 +7,8 @@
 body {
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
-    background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0d1b3e 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 30%, #f0f4ff 60%, #f8f9fa 100%);
+    color: #1a1a2e;
     padding: 25px;
 }
 
@@ -23,14 +23,14 @@ body {
 .topbar-left h1 {
     font-size: 1.5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    background: linear-gradient(135deg, #1e40af, #7c3aed, #0891b2);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .topbar-left p {
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(26, 26, 46, 0.7);
     font-size: 0.85rem;
     margin-top: 3px;
 }
@@ -59,7 +59,7 @@ body {
 .btn-export {
     background: rgba(52, 211, 153, 0.15);
     border: 1px solid rgba(52, 211, 153, 0.3);
-    color: #34d399;
+    color: #10b981;
 }
 
 .btn-export:hover {
@@ -67,19 +67,19 @@ body {
 }
 
 .btn-display {
-    background: rgba(96, 165, 250, 0.15);
-    border: 1px solid rgba(96, 165, 250, 0.3);
-    color: #60a5fa;
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #1e40af;
 }
 
 .btn-display:hover {
-    background: rgba(96, 165, 250, 0.25);
+    background: rgba(59, 130, 246, 0.25);
 }
 
 .btn-reset {
     background: rgba(239, 68, 68, 0.15);
     border: 1px solid rgba(239, 68, 68, 0.2);
-    color: #f87171;
+    color: #dc2626;
 }
 
 .btn-reset:hover {
@@ -87,14 +87,14 @@ body {
 }
 
 .btn-logout {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.6);
+    background: rgba(26, 26, 46, 0.06);
+    border: 1px solid rgba(26, 26, 46, 0.1);
+    color: rgba(26, 26, 46, 0.6);
 }
 
 .btn-logout:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: rgba(26, 26, 46, 0.1);
+    color: #1a1a2e;
 }
 
 /* Stats Row */
@@ -106,9 +106,9 @@ body {
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 16px;
     padding: 20px;
     text-align: center;
@@ -152,30 +152,30 @@ body {
 }
 
 .stat-card:nth-child(1) .stat-value {
-    color: #60a5fa;
+    color: #3b82f6;
 }
 
 .stat-card:nth-child(2) .stat-value {
-    color: #fbbf24;
+    color: #f59e0b;
 }
 
 .stat-card:nth-child(3) .stat-value {
-    color: #a78bfa;
+    color: #8b5cf6;
 }
 
 .stat-card:nth-child(4) .stat-value {
-    color: #34d399;
+    color: #10b981;
 }
 
 .stat-card:nth-child(5) .stat-value {
-    color: #f87171;
+    color: #ef4444;
 }
 
 .stat-card .stat-label {
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(26, 26, 46, 0.7);
     margin-top: 5px;
 }
 
@@ -188,9 +188,9 @@ body {
 }
 
 .loket-card {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 12px;
     padding: 12px;
     text-align: center;
@@ -198,15 +198,16 @@ body {
 }
 
 .loket-card.active {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(96, 165, 250, 0.3);
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.15);
 }
 
 .loket-title {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 2px;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(26, 26, 46, 0.7);
     margin-bottom: 8px;
 }
 
@@ -214,13 +215,13 @@ body {
     font-family: 'JetBrains Mono', monospace;
     font-size: 1.5rem;
     font-weight: 800;
-    color: #60a5fa;
+    color: #3b82f6;
     margin-bottom: 3px;
 }
 
 .loket-current-nama {
     font-size: 0.65rem;
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(26, 26, 46, 0.7);
     margin-bottom: 8px;
     min-height: 16px;
 }
@@ -233,7 +234,7 @@ body {
 }
 
 .loket-stat {
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(26, 26, 46, 0.7);
 }
 
 .loket-stat span {
@@ -242,9 +243,9 @@ body {
 
 /* Data Table */
 .table-container {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 16px;
     overflow: hidden;
 }
@@ -254,13 +255,13 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 20px 25px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.1);
 }
 
 .table-header h2 {
     font-size: 1rem;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.8);
+    color: #1a1a2e;
 }
 
 .search-box {
@@ -269,10 +270,10 @@ body {
 
 .search-box input {
     padding: 8px 14px 8px 36px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 10px;
-    color: #fff;
+    color: #1a1a2e;
     font-family: 'Inter', sans-serif;
     font-size: 0.8rem;
     outline: none;
@@ -281,12 +282,13 @@ body {
 }
 
 .search-box input:focus {
-    border-color: rgba(96, 165, 250, 0.5);
-    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: rgba(255, 255, 255, 0.8);
 }
 
 .search-box input::placeholder {
-    color: rgba(255, 255, 255, 0.25);
+    color: rgba(26, 26, 46, 0.5);
 }
 
 .search-box::before {
@@ -314,7 +316,7 @@ body {
 }
 
 .table-scroll::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(59, 130, 246, 0.2);
     border-radius: 10px;
 }
 
@@ -326,15 +328,15 @@ table {
 thead th {
     position: sticky;
     top: 0;
-    background: rgba(15, 23, 42, 0.95);
+    background: rgba(243, 244, 246, 0.95);
     padding: 12px 16px;
     text-align: left;
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(26, 26, 46, 0.7);
     font-weight: 600;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.1);
     white-space: nowrap;
     z-index: 2;
 }
@@ -342,8 +344,8 @@ thead th {
 tbody td {
     padding: 12px 16px;
     font-size: 0.85rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    color: rgba(255, 255, 255, 0.7);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.05);
+    color: rgba(26, 26, 46, 0.8);
     white-space: nowrap;
 }
 
@@ -352,13 +354,13 @@ tbody tr {
 }
 
 tbody tr:hover {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(59, 130, 246, 0.05);
 }
 
 .no-antrian-cell {
     font-family: 'JetBrains Mono', monospace;
     font-weight: 700;
-    color: #60a5fa;
+    color: #3b82f6;
     font-size: 1rem;
 }
 
@@ -373,23 +375,23 @@ tbody tr:hover {
 }
 
 .status-menunggu {
-    background: rgba(251, 191, 36, 0.15);
-    color: #fbbf24;
+    background: rgba(245, 158, 11, 0.15);
+    color: #d97706;
 }
 
 .status-dipanggil {
-    background: rgba(96, 165, 250, 0.15);
-    color: #60a5fa;
+    background: rgba(59, 130, 246, 0.15);
+    color: #1e40af;
 }
 
 .status-selesai {
-    background: rgba(52, 211, 153, 0.15);
-    color: #34d399;
+    background: rgba(16, 185, 129, 0.15);
+    color: #059669;
 }
 
 .status-dilewati {
     background: rgba(239, 68, 68, 0.15);
-    color: #f87171;
+    color: #b91c1c;
 }
 
 .action-links {
@@ -407,21 +409,22 @@ tbody tr:hover {
     border: none;
     font-family: 'Inter', sans-serif;
     background: none;
+    color: #10b981;
 }
 
 .action-link.complete {
-    background: rgba(52, 211, 153, 0.15);
-    color: #34d399;
+    background: rgba(16, 185, 129, 0.15);
+    color: #059669;
 }
 
 .action-link.complete:hover {
-    background: rgba(52, 211, 153, 0.25);
+    background: rgba(16, 185, 129, 0.25);
 }
 
 .table-empty {
     text-align: center;
     padding: 50px;
-    color: rgba(255, 255, 255, 0.2);
+    color: rgba(26, 26, 46, 0.2);
 }
 
 /* Toast */
@@ -436,6 +439,7 @@ tbody tr:hover {
     border-radius: 14px;
     font-weight: 600;
     font-size: 0.9rem;
+    color: white;
     z-index: 100;
     transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
@@ -457,7 +461,7 @@ tbody tr:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(5px);
     display: none;
     align-items: center;
@@ -470,14 +474,15 @@ tbody tr:hover {
 }
 
 .modal-box {
-    background: rgba(30, 30, 60, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 20px;
     padding: 35px;
     text-align: center;
     max-width: 400px;
     width: 90%;
     animation: pop-in 0.3s ease;
+    color: #1a1a2e;
 }
 
 @keyframes pop-in {
@@ -495,10 +500,11 @@ tbody tr:hover {
 .modal-box h3 {
     font-size: 1.2rem;
     margin-bottom: 10px;
+    color: #1a1a2e;
 }
 
 .modal-box p {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(26, 26, 46, 0.7);
     font-size: 0.85rem;
     margin-bottom: 25px;
 }
@@ -521,13 +527,21 @@ tbody tr:hover {
 }
 
 .modal-btn.cancel {
-    background: rgba(255, 255, 255, 0.06);
-    color: rgba(255, 255, 255, 0.6);
+    background: rgba(26, 26, 46, 0.06);
+    color: rgba(26, 26, 46, 0.7);
+}
+
+.modal-btn.cancel:hover {
+    background: rgba(26, 26, 46, 0.1);
 }
 
 .modal-btn.danger {
     background: rgba(239, 68, 68, 0.8);
     color: white;
+}
+
+.modal-btn.danger:hover {
+    background: rgba(239, 68, 68, 0.9);
 }
 
 .modal-btn:hover {

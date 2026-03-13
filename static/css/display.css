@@ -6,8 +6,8 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 30%, #0d1b3e 60%, #0a0e27 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 30%, #f0f4ff 60%, #f8f9fa 100%);
+    color: #1a1a2e;
     min-height: 100vh;
     overflow-x: hidden;
 }
@@ -24,14 +24,14 @@ body {
 .particle {
     position: absolute;
     border-radius: 50%;
-    background: rgba(99, 179, 237, 0.15);
+    background: rgba(59, 130, 246, 0.1);
     animation: float-particle 20s infinite;
 }
 
 .particle:nth-child(1) { width: 300px; height: 300px; top: -100px; left: -50px; animation-delay: 0s; }
-.particle:nth-child(2) { width: 200px; height: 200px; top: 50%; right: -80px; animation-delay: -5s; background: rgba(129, 140, 248, 0.1); }
-.particle:nth-child(3) { width: 150px; height: 150px; bottom: -50px; left: 30%; animation-delay: -10s; background: rgba(52, 211, 153, 0.1); }
-.particle:nth-child(4) { width: 250px; height: 250px; top: 20%; left: 60%; animation-delay: -15s; background: rgba(251, 191, 36, 0.08); }
+.particle:nth-child(2) { width: 200px; height: 200px; top: 50%; right: -80px; animation-delay: -5s; background: rgba(129, 140, 248, 0.08); }
+.particle:nth-child(3) { width: 150px; height: 150px; bottom: -50px; left: 30%; animation-delay: -10s; background: rgba(52, 211, 153, 0.08); }
+.particle:nth-child(4) { width: 250px; height: 250px; top: 20%; left: 60%; animation-delay: -15s; background: rgba(251, 191, 36, 0.06); }
 
 @keyframes float-particle {
     0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
@@ -59,7 +59,7 @@ body {
 .header h1 {
     font-size: 2.2rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #60a5fa, #a78bfa, #34d399);
+    background: linear-gradient(135deg, #1e40af, #7c3aed, #0891b2);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -69,7 +69,7 @@ body {
 
 .header .subtitle {
     font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(26, 26, 46, 0.7);
     margin-top: 5px;
     font-weight: 300;
 }
@@ -86,12 +86,12 @@ body {
     font-family: 'JetBrains Mono', monospace;
     font-size: 2rem;
     font-weight: 800;
-    color: #60a5fa;
+    color: #1e40af;
 }
 
 .clock .date {
     font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(26, 26, 46, 0.6);
 }
 
 /* Main Content */
@@ -102,6 +102,7 @@ body {
     gap: 25px;
     margin-top: 15px;
     min-height: 0;
+    overflow: hidden;
 }
 
 /* Loket Grid */
@@ -109,14 +110,16 @@ body {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 12px;
+    overflow: hidden;
+    min-height: 0;
 }
 
 .loket-card {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 16px;
-    padding: 15px 10px;
+    padding: 12px 8px; /* Kurangi padding */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -124,6 +127,7 @@ body {
     position: relative;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 120px; /* Tentukan tinggi minimal */
 }
 
 .loket-card::before {
@@ -144,9 +148,9 @@ body {
 .loket-card:nth-child(5n+5)::before { background: linear-gradient(90deg, #ef4444, #f87171); }
 
 .loket-card.active {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(96, 165, 250, 0.3);
-    box-shadow: 0 0 40px rgba(96, 165, 250, 0.1);
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.15);
 }
 
 .loket-card.calling {
@@ -154,8 +158,8 @@ body {
 }
 
 @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(96, 165, 250, 0.1); }
-    50% { box-shadow: 0 0 50px rgba(96, 165, 250, 0.3), 0 0 80px rgba(96, 165, 250, 0.1); }
+    0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.15); }
+    50% { box-shadow: 0 0 50px rgba(59, 130, 246, 0.3), 0 0 80px rgba(59, 130, 246, 0.15); }
 }
 
 .loket-label {
@@ -163,7 +167,7 @@ body {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 2px;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(26, 26, 46, 0.7);
     margin-bottom: 10px;
 }
 
@@ -174,18 +178,18 @@ body {
     line-height: 1;
     margin-bottom: 5px;
     transition: all 0.3s ease;
-    color: #60a5fa;
+    color: #3b82f6;
 }
 
-.loket-card:nth-child(5n+1) .loket-number { color: #60a5fa; }
-.loket-card:nth-child(5n+2) .loket-number { color: #a78bfa; }
-.loket-card:nth-child(5n+3) .loket-number { color: #34d399; }
-.loket-card:nth-child(5n+4) .loket-number { color: #fbbf24; }
-.loket-card:nth-child(5n+5) .loket-number { color: #f87171; }
+.loket-card:nth-child(5n+1) .loket-number { color: #3b82f6; }
+.loket-card:nth-child(5n+2) .loket-number { color: #8b5cf6; }
+.loket-card:nth-child(5n+3) .loket-number { color: #10b981; }
+.loket-card:nth-child(5n+4) .loket-number { color: #f59e0b; }
+.loket-card:nth-child(5n+5) .loket-number { color: #ef4444; }
 
 .loket-nama {
     font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(26, 26, 46, 0.7);
     max-width: 180px;
     text-align: center;
     white-space: nowrap;
@@ -194,15 +198,15 @@ body {
 }
 
 .loket-number.empty {
-    color: rgba(255, 255, 255, 0.15);
+    color: rgba(26, 26, 46, 0.1);
     font-size: 2rem;
 }
 
 /* Sixth card - stats summary */
 .stats-summary-card {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 20px;
     padding: 25px;
     display: flex;
@@ -220,12 +224,12 @@ body {
     font-family: 'JetBrains Mono', monospace;
     font-size: 2rem;
     font-weight: 800;
-    color: #60a5fa;
+    color: #3b82f6;
 }
 
 .stats-summary-card .stat-label {
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(26, 26, 46, 0.7);
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -238,9 +242,9 @@ body {
 }
 
 .sidebar-header {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 16px;
     padding: 18px;
     text-align: center;
@@ -251,7 +255,7 @@ body {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 2px;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(26, 26, 46, 0.7);
     margin-bottom: 5px;
 }
 
@@ -259,14 +263,14 @@ body {
     font-family: 'JetBrains Mono', monospace;
     font-size: 2.5rem;
     font-weight: 800;
-    color: #fbbf24;
+    color: #f59e0b;
 }
 
 .waiting-list {
     flex: 1;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 16px;
     padding: 15px;
     overflow-y: auto;
@@ -282,7 +286,7 @@ body {
 }
 
 .waiting-list::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(59, 130, 246, 0.2);
     border-radius: 10px;
 }
 
@@ -293,8 +297,8 @@ body {
     padding: 10px 12px;
     border-radius: 10px;
     margin-bottom: 6px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(59, 130, 246, 0.05);
+    border: 1px solid rgba(59, 130, 246, 0.1);
     transition: all 0.3s ease;
     animation: slide-in 0.4s ease;
 }
@@ -305,25 +309,25 @@ body {
 }
 
 .waiting-item:first-child {
-    background: rgba(251, 191, 36, 0.1);
-    border-color: rgba(251, 191, 36, 0.2);
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.3);
 }
 
 .waiting-item .w-no {
     font-family: 'JetBrains Mono', monospace;
     font-size: 1.2rem;
     font-weight: 800;
-    color: #60a5fa;
+    color: #3b82f6;
     min-width: 45px;
 }
 
 .waiting-item:first-child .w-no {
-    color: #fbbf24;
+    color: #f59e0b;
 }
 
 .waiting-item .w-nama {
     font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(26, 26, 46, 0.7);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -332,7 +336,7 @@ body {
 .waiting-empty {
     text-align: center;
     padding: 40px 0;
-    color: rgba(255, 255, 255, 0.2);
+    color: rgba(26, 26, 46, 0.2);
     font-size: 0.85rem;
 }
 
@@ -362,6 +366,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 3px;
     opacity: 0.8;
+    color: white;
 }
 
 .notification .notif-number {
@@ -369,12 +374,14 @@ body {
     font-size: 4rem;
     font-weight: 800;
     line-height: 1.2;
+    color: white;
 }
 
 .notification .notif-loket {
     font-size: 1.1rem;
     font-weight: 600;
     opacity: 0.9;
+    color: white;
 }
 
 /* Footer */
@@ -387,7 +394,7 @@ body {
 
 .footer-bar .running-text {
     font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(26, 26, 46, 0.4);
     animation: marquee 20s linear infinite;
 }
 
@@ -402,7 +409,7 @@ body {
 }
 
 .nav-links a {
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(26, 26, 46, 0.4);
     text-decoration: none;
     font-size: 0.75rem;
     padding: 5px 10px;
@@ -411,8 +418,8 @@ body {
 }
 
 .nav-links a:hover {
-    color: rgba(255, 255, 255, 0.7);
-    background: rgba(255, 255, 255, 0.05);
+    color: rgba(26, 26, 46, 0.8);
+    background: rgba(59, 130, 246, 0.1);
 }
 
 /* Responsive */

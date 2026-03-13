@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Sistem Antrian</title>
+    <title>Dashboard Admin - Sistem Antrian</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap"
         rel="stylesheet">
@@ -16,7 +16,7 @@
     <!-- Top Bar -->
     <div class="topbar">
         <div class="topbar-left">
-            <h1>⚙️ Admin Dashboard</h1>
+            <h1>⚙️ Dashboard Admin</h1>
             <p>Kelola sistem antrian wawancara</p>
         </div>
         <div class="topbar-actions">
@@ -69,8 +69,8 @@
                     <tr>
                         <th>No Antrian</th>
                         <th>Nama</th>
-                        <th>Telepon</th>
-                        <th>Email</th>
+                        <th>No. Telepon</th>
+                        <th>ID Sobat</th>
                         <th>Status</th>
                         <th>Loket</th>
                         <th>Waktu Daftar</th>
@@ -141,7 +141,7 @@
                 <td class="no-antrian-cell">${row.no_antrian}</td>
                 <td>${row.nama}</td>
                 <td>${row.telepon || '-'}</td>
-                <td>${row.email || '-'}</td>
+                <td>${row.id_sobat || '-'}</td>
                 <td>${getStatusBadge(row.status)}</td>
                 <td>${row.loket || '-'}</td>
                 <td>${row.waktu_daftar || '-'}</td>
@@ -160,7 +160,7 @@
                 row.nama.toLowerCase().includes(query) ||
                 String(row.no_antrian).includes(query) ||
                 (row.telepon || '').includes(query) ||
-                (row.email || '').toLowerCase().includes(query)
+                (row.id_sobat || '').toLowerCase().includes(query)
             );
             renderTable(filtered);
         }

@@ -49,7 +49,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nama TEXT NOT NULL,
             telepon TEXT,
-            email TEXT,
+            id_sobat INTEGER,
             no_antrian INTEGER,
             loket INTEGER,
             status TEXT DEFAULT 'Menunggu',
@@ -101,7 +101,7 @@ init_db()
 # =========================
 # HELPER FUNCTIONS
 # =========================
-def append_to_excel(nama, telepon, email, no_antrian, waktu):
+def append_to_excel(nama, telepon, id_sobat, no_antrian, waktu):
     if openpyxl is None:
         return
     
@@ -119,7 +119,7 @@ def append_to_excel(nama, telepon, email, no_antrian, waktu):
         wb = Workbook()
         ws = wb.active
         ws.title = "Absensi Wawancara"
-        headers = ["No", "Nama Lengkap", "Telepon", "Email", "No Antrian", "Waktu Daftar", "Status"]
+        headers = ["No", "Nama Lengkap", "Telepon", "ID Sobat", "No Antrian", "Waktu Daftar", "Status"]
         for col, header in enumerate(headers, 1):
             cell = ws.cell(row=1, column=col, value=header)
             cell.font = Font(bold=True, color="FFFFFF", size=11)
@@ -137,7 +137,7 @@ def append_to_excel(nama, telepon, email, no_antrian, waktu):
         ws.column_dimensions['G'].width = 12
 
     row_num = ws.max_row + 1
-    row_data = [row_num - 1, nama, telepon, email, no_antrian, waktu, "Menunggu"]
+    row_data = [row_num - 1, nama, telepon, id_sobat, no_antrian, waktu, "Menunggu"]
     for col, value in enumerate(row_data, 1):
         cell = ws.cell(row=row_num, column=col, value=value)
         cell.alignment = Alignment(horizontal="center", vertical="center")
@@ -172,7 +172,7 @@ def absensi():
 def submit_absensi():
     nama = request.form.get("nama", "").strip()
     telepon = request.form.get("telepon", "").strip()
-    email = request.form.get("email", "").strip()
+    id_sobat = request.form.get("id_sobat", "").strip()
 
     if not nama:
         return redirect("/absensi")
@@ -188,17 +188,17 @@ def submit_absensi():
 
     now = datetime.now()
     cursor.execute(
-        """INSERT INTO antrian (nama, telepon, email, no_antrian, loket, status, waktu_daftar)
+        """INSERT INTO antrian (nama, telepon, id_sobat, no_antrian, loket, status, waktu_daftar)
            VALUES (?, ?, ?, ?, ?, ?, ?)""",
-        (nama, telepon, email, next_no, None, "Menunggu", now.strftime("%Y-%m-%d %H:%M:%S"))
+        (nama, telepon, id_sobat, next_no, None, "Menunggu", now.strftime("%Y-%m-%d %H:%M:%S"))
     )
     conn.commit()
     conn.close()
 
     # Save to Excel
-    append_to_excel(nama, telepon, email, next_no, now.strftime("%Y-%m-%d %H:%M:%S"))
+    append_to_excel(nama, telepon, id_sobat, next_no, now.strftime("%Y-%m-%d %H:%M:%S"))
 
-    return render_template("tiket.html", nama=nama, email=email, telepon=telepon, no_antrian=next_no, waktu=now.strftime("%d/%m/%Y %H:%M"))
+    return render_template("tiket.html", nama=nama, id_sobat=id_sobat, telepon=telepon, no_antrian=next_no, waktu=now.strftime("%d/%m/%Y %H:%M"))
 
 
 # =========================
@@ -599,7 +599,7 @@ def admin_export_excel():
         top=Side(style='thin'), bottom=Side(style='thin')
     )
 
-    headers = ["No Antrian", "Nama", "Telepon", "Email", "Status", "Loket", "Waktu Daftar", "Waktu Dipanggil", "Waktu Selesai", "Pewawancara"]
+    headers = ["No Antrian", "Nama", "Telepon", "ID Sobat", "Status", "Loket", "Waktu Daftar", "Waktu Dipanggil", "Waktu Selesai", "Pewawancara"]
     for col, header in enumerate(headers, 1):
         cell = ws.cell(row=1, column=col, value=header)
         cell.font = Font(bold=True, color="FFFFFF", size=11)
@@ -609,7 +609,7 @@ def admin_export_excel():
 
     for row_idx, row in enumerate(rows, 2):
         data = [
-            row["no_antrian"], row["nama"], row["telepon"] or "-", row["email"] or "-",
+            row["no_antrian"], row["nama"], row["telepon"] or "-", row["id_sobat"] or "-",
             row["status"], row["loket"] or "-", row["waktu_daftar"] or "-",
             row["waktu_dipanggil"] or "-", row["waktu_selesai"] or "-",
             row["nama_pewawancara"] or "-"
