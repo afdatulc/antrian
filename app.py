@@ -75,6 +75,13 @@ def init_db():
         )
     """)
 
+    # Create indexes for performance optimization
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_antrian_status ON antrian(status)")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_antrian_loket ON antrian(loket)")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_antrian_loket_status ON antrian(loket, status)")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_antrian_no_antrian ON antrian(no_antrian)")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_antrian_waktu_dipanggil ON antrian(waktu_dipanggil)")
+
     # Check if we need to seed
     cursor.execute("SELECT COUNT(*) FROM users")
     if cursor.fetchone()[0] == 0:
@@ -223,8 +230,8 @@ def api_data_antrian():
         else:
             result["loket"][f"loket{i}"] = {"no": "-", "nama": ""}
 
-    # Waiting queue
-    cursor.execute("SELECT no_antrian, nama FROM antrian WHERE status='Menunggu' ORDER BY id")
+    # Waiting queue (limited to 50 for display performance)
+    cursor.execute("SELECT no_antrian, nama FROM antrian WHERE status='Menunggu' ORDER BY id LIMIT 50")
     rows = cursor.fetchall()
     result["menunggu"] = [{"no": row["no_antrian"], "nama": row["nama"]} for row in rows]
 
@@ -469,39 +476,76 @@ def api_admin_data():
     conn = get_db()
     cursor = conn.cursor()
 
-    # All queue data
-    cursor.execute("SELECT * FROM antrian ORDER BY id DESC")
-    antrian = [dict(row) for row in cursor.fetchall()]
+    # Pagination parameters
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 50, type=int)
+    per_page = min(per_page, 200)  # Max 200 per page
+    search = request.args.get('search', '', type=str).strip()
+    offset = (page - 1) * per_page
 
-    # Stats
-    cursor.execute("SELECT COUNT(*) FROM antrian WHERE status='Menunggu'")
-    menunggu = cursor.fetchone()[0]
-    cursor.execute("SELECT COUNT(*) FROM antrian WHERE status='Dipanggil'")
-    dipanggil = cursor.fetchone()[0]
-    cursor.execute("SELECT COUNT(*) FROM antrian WHERE status='Selesai'")
-    selesai = cursor.fetchone()[0]
-    cursor.execute("SELECT COUNT(*) FROM antrian WHERE status='Dilewati'")
-    dilewati = cursor.fetchone()[0]
-    cursor.execute("SELECT COUNT(*) FROM antrian")
-    total = cursor.fetchone()[0]
-
-    # Per loket stats
-    loket_stats = {}
-    for i in range(1, 26):
-        cursor.execute("SELECT COUNT(*) FROM antrian WHERE loket=? AND status='Selesai'", (i,))
-        s = cursor.fetchone()[0]
-        cursor.execute("SELECT COUNT(*) FROM antrian WHERE loket=? AND status='Dipanggil'", (i,))
-        d = cursor.fetchone()[0]
+    # Queue data with pagination and optional search
+    if search:
+        search_param = f"%{search}%"
         cursor.execute(
-            "SELECT no_antrian, nama FROM antrian WHERE loket=? AND status='Dipanggil' ORDER BY id DESC LIMIT 1",
-            (i,)
+            "SELECT COUNT(*) FROM antrian WHERE nama LIKE ? OR CAST(no_antrian AS TEXT) LIKE ? OR telepon LIKE ? OR email LIKE ?",
+            (search_param, search_param, search_param, search_param)
         )
-        current = cursor.fetchone()
-        loket_stats[f"loket{i}"] = {
-            "selesai": s,
-            "dipanggil": d,
-            "current": {"no": current["no_antrian"], "nama": current["nama"]} if current else None
-        }
+        total_filtered = cursor.fetchone()[0]
+        cursor.execute(
+            "SELECT * FROM antrian WHERE nama LIKE ? OR CAST(no_antrian AS TEXT) LIKE ? OR telepon LIKE ? OR email LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?",
+            (search_param, search_param, search_param, search_param, per_page, offset)
+        )
+    else:
+        cursor.execute("SELECT COUNT(*) FROM antrian")
+        total_filtered = cursor.fetchone()[0]
+        cursor.execute("SELECT * FROM antrian ORDER BY id DESC LIMIT ? OFFSET ?", (per_page, offset))
+
+    antrian = [dict(row) for row in cursor.fetchall()]
+    total_pages = max(1, (total_filtered + per_page - 1) // per_page)
+
+    # Stats (using single optimized query)
+    cursor.execute("""
+        SELECT
+            COUNT(*) as total,
+            SUM(CASE WHEN status='Menunggu' THEN 1 ELSE 0 END) as menunggu,
+            SUM(CASE WHEN status='Dipanggil' THEN 1 ELSE 0 END) as dipanggil,
+            SUM(CASE WHEN status='Selesai' THEN 1 ELSE 0 END) as selesai,
+            SUM(CASE WHEN status='Dilewati' THEN 1 ELSE 0 END) as dilewati
+        FROM antrian
+    """)
+    stats_row = cursor.fetchone()
+    total = stats_row["total"] or 0
+    menunggu = stats_row["menunggu"] or 0
+    dipanggil = stats_row["dipanggil"] or 0
+    selesai = stats_row["selesai"] or 0
+    dilewati = stats_row["dilewati"] or 0
+
+    # Per loket stats (optimized: 2 queries instead of 75)
+    loket_stats = {}
+    # Initialize all lokets
+    for i in range(1, 26):
+        loket_stats[f"loket{i}"] = {"selesai": 0, "dipanggil": 0, "current": None}
+
+    # Get selesai counts per loket in one query
+    cursor.execute("SELECT loket, COUNT(*) as cnt FROM antrian WHERE status='Selesai' AND loket IS NOT NULL GROUP BY loket")
+    for row in cursor.fetchall():
+        key = f"loket{row['loket']}"
+        if key in loket_stats:
+            loket_stats[key]["selesai"] = row["cnt"]
+
+    # Get current dipanggil per loket in one query
+    cursor.execute("""
+        SELECT loket, no_antrian, nama FROM antrian 
+        WHERE status='Dipanggil' AND loket IS NOT NULL 
+        ORDER BY id DESC
+    """)
+    seen_lokets = set()
+    for row in cursor.fetchall():
+        key = f"loket{row['loket']}"
+        if key in loket_stats and key not in seen_lokets:
+            loket_stats[key]["dipanggil"] = 1
+            loket_stats[key]["current"] = {"no": row["no_antrian"], "nama": row["nama"]}
+            seen_lokets.add(key)
 
     conn.close()
 
@@ -514,7 +558,13 @@ def api_admin_data():
             "dilewati": dilewati,
             "total": total
         },
-        "loket_stats": loket_stats
+        "loket_stats": loket_stats,
+        "pagination": {
+            "page": page,
+            "per_page": per_page,
+            "total_items": total_filtered,
+            "total_pages": total_pages
+        }
     })
 
 
