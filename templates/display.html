@@ -35,17 +35,7 @@
         <div class="main-content">
             <!-- Loket Grid (dynamically generated) -->
             <div class="loket-grid" id="loket-grid">
-                <!-- Stats Summary -->
-                <div class="stats-summary-card">
-                    <div class="stat-item">
-                        <div class="stat-value" id="stat-menunggu">0</div>
-                        <div class="stat-label">Menunggu</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="stat-selesai" style="color: #34d399;">0</div>
-                        <div class="stat-label">Selesai</div>
-                    </div>
-                </div>
+                <!-- cards inserted by JS -->
             </div>
 
             <!-- Sidebar -->
@@ -138,18 +128,7 @@
                 <div class="loket-nama" id="nama-${i}">${nama}</div>
             </div>`;
             }
-            // Add stats summary card
-            html += `
-            <div class="stats-summary-card">
-                <div class="stat-item">
-                    <div class="stat-value" id="stat-menunggu">${document.getElementById('stat-menunggu')?.textContent || '0'}</div>
-                    <div class="stat-label">Menunggu</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="stat-selesai" style="color: #34d399;">${document.getElementById('stat-selesai')?.textContent || '0'}</div>
-                    <div class="stat-label">Selesai</div>
-                </div>
-            </div>`;
+            // no stats summary card here; sidebar shows waiting count only
             grid.innerHTML = html;
         }
 
@@ -162,9 +141,7 @@
                 // Render loket cards dynamically
                 renderLoketCards(data.loket);
 
-                // Stats
-                document.getElementById('stat-menunggu').textContent = data.total_menunggu;
-                document.getElementById('stat-selesai').textContent = data.total_selesai;
+                // Sidebar waiting count only
                 document.getElementById('total-waiting').textContent = data.total_menunggu;
 
                 // Waiting list
