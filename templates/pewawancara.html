@@ -16,7 +16,7 @@
     <!-- Top Bar -->
     <div class="topbar">
         <div class="topbar-left">
-            <h1>🎤 Panel Pewawancara</h1>
+            <h1>Panel Pewawancara</h1>
             <p>{{ nama_display }}</p>
         </div>
         <div class="topbar-right">
@@ -35,14 +35,14 @@
 
             <div class="action-buttons">
                 <button class="action-btn btn-panggil" id="btn-panggil" onclick="panggilBerikutnya()">
-                    📢 Panggil Berikutnya
+                    Panggil Berikutnya
                 </button>
                 <button class="action-btn btn-selesai" id="btn-selesai" onclick="selesaiWawancara()"
                     style="display:none;">
-                    ✅ Selesai
+                    Selesai
                 </button>
                 <button class="action-btn btn-ulang" id="btn-ulang" onclick="panggilUlang()" style="display:none;">
-                    🔄 Panggil Ulang
+                    Panggil Ulang
                 </button>
             </div>
         </div>
@@ -61,7 +61,7 @@
             </div>
 
             <div class="history-panel">
-                <h3>📋 Riwayat Loket {{ loket }}</h3>
+                <h3>Riwayat Loket {{ loket }}</h3>
                 <div id="history-list">
                     <div class="history-empty">Belum ada riwayat</div>
                 </div>
@@ -152,7 +152,7 @@
                 const res = await fetch('/panggil-berikutnya', { method: 'POST' });
                 const data = await res.json();
                 if (data.success) {
-                    showToast(`✅ Memanggil nomor antrian ${data.no_antrian} - ${data.nama}`);
+                    showToast(`Memanggil nomor antrian ${data.no_antrian} - ${data.nama}`);
                     loadData();
                 } else {
                     showToast(data.message || 'Tidak ada antrian', true);
@@ -161,7 +161,7 @@
                 showToast('Gagal memanggil antrian', true);
             }
 
-            btn.innerHTML = '📢 Panggil Berikutnya';
+            btn.innerHTML = 'Panggil Berikutnya';
             btn.disabled = false;
             isLoading = false;
         }
@@ -174,7 +174,7 @@
                 const res = await fetch('/selesai-wawancara', { method: 'POST' });
                 const data = await res.json();
                 if (data.success) {
-                    showToast('✅ Wawancara selesai!');
+                    showToast('Wawancara selesai!');
                     loadData();
                 }
             } catch (err) {
@@ -189,7 +189,7 @@
                 const res = await fetch('/panggil-ulang', { method: 'POST' });
                 const data = await res.json();
                 if (data.success) {
-                    showToast(`🔄 Memanggil ulang nomor ${data.no_antrian} - ${data.nama}`);
+                    showToast(`Memanggil ulang nomor ${data.no_antrian} - ${data.nama}`);
                 } else {
                     showToast(data.message || 'Gagal panggil ulang', true);
                 }

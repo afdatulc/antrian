@@ -23,7 +23,7 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>📋 Sistem Antrian Wawancara</h1>
+            <h1>Nomer Antrian Wawancara</h1>
             <p class="subtitle">Silakan perhatikan layar untuk nomor antrian Anda</p>
             <div class="clock">
                 <div class="time" id="clock-time">--:--:--</div>
@@ -54,13 +54,13 @@
         <div class="footer-bar">
             <div style="overflow: hidden; flex: 1;">
                 <div class="running-text">
-                    🎯 Silakan menunggu nomor antrian Anda dipanggil oleh pewawancara • Pastikan Anda siap saat nomor
+                    Silakan menunggu nomor antrian Anda dipanggil oleh pewawancara • Pastikan Anda siap saat nomor
                     dipanggil • Terima kasih atas kesabaran Anda
                 </div>
             </div>
             <div class="nav-links">
-                <a href="/absensi">📝 Daftar</a>
-                <a href="/login">🔐 Login</a>
+                <a href="/absensi">Daftar</a>
+                <a href="/login">Login</a>
             </div>
         </div>
     </div>
@@ -147,14 +147,15 @@
                 // Waiting list
                 const waitingEl = document.getElementById('waiting-list');
                 if (data.menunggu.length > 0) {
-                    waitingEl.innerHTML = data.menunggu.map((item, idx) => `
-                    <div class="waiting-item" style="animation-delay: ${idx * 0.05}s">
+                    const top10 = data.menunggu.slice(0, 10);
+                    waitingEl.innerHTML = top10.map((item, idx) => `
+                    <div class="waiting-item">
                         <span class="w-no">${item.no}</span>
                         <span class="w-nama">${item.nama}</span>
                     </div>
                 `).join('');
                 } else {
-                    waitingEl.innerHTML = '<div class="waiting-empty">✅ Tidak ada antrian menunggu</div>';
+                    waitingEl.innerHTML = '<div class="waiting-empty">Tidak ada antrian menunggu</div>';
                 }
 
                 // Check for new call notification

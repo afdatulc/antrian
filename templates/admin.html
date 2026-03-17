@@ -16,13 +16,13 @@
     <!-- Top Bar -->
     <div class="topbar">
         <div class="topbar-left">
-            <h1>⚙️ Dashboard Admin</h1>
+            <h1>Dashboard Admin</h1>
             <p>Kelola sistem antrian wawancara</p>
         </div>
         <div class="topbar-actions">
-            <a href="/display" class="topbar-btn btn-display" target="_blank">📺 Buka Display</a>
-            <a href="/admin/export-excel" class="topbar-btn btn-export">📥 Export Excel</a>
-            <button class="topbar-btn btn-reset" onclick="showResetModal()">🗑️ Reset Antrian</button>
+            <a href="/display" class="topbar-btn btn-display" target="_blank">Buka Display</a>
+            <a href="/admin/export-excel" class="topbar-btn btn-export">Export Excel</a>
+            <button class="topbar-btn btn-reset" onclick="showResetModal()">Reset Antrian</button>
             <a href="/logout" class="topbar-btn btn-logout">Logout</a>
         </div>
     </div>
@@ -58,7 +58,7 @@
     <!-- Data Table -->
     <div class="table-container">
         <div class="table-header">
-            <h2>📋 Data Antrian</h2>
+            <h2>Data Antrian</h2>
             <div class="search-box">
                 <input id="search-input" type="text" placeholder="Cari nama atau nomor..." oninput="debounceSearch()">
             </div>
@@ -94,7 +94,7 @@
     <!-- Reset Modal -->
     <div class="modal-overlay" id="reset-modal">
         <div class="modal-box">
-            <h3>⚠️ Reset Semua Antrian?</h3>
+            <h3>Reset Semua Antrian?</h3>
             <p>Semua data antrian akan dihapus. Tindakan ini tidak dapat dibatalkan.</p>
             <div class="modal-actions">
                 <button class="modal-btn cancel" onclick="hideResetModal()">Batal</button>
@@ -267,7 +267,7 @@
                 const res = await fetch('/admin/reset', { method: 'POST' });
                 const data = await res.json();
                 if (data.success) {
-                    showToast('🗑️ Semua antrian telah direset');
+                    showToast('Semua antrian telah direset');
                     hideResetModal();
                     currentPage = 1;
                     currentSearch = '';

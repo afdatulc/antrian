@@ -94,7 +94,15 @@ def init_db():
         for i in range(1, 26):
             cursor.execute(
                 "INSERT INTO users (username, password_hash, role, loket, nama_display) VALUES (?, ?, ?, ?, ?)",
-                (f"loket{i}", generate_password_hash("123"), "interviewer", i, f"Pewawancara Loket {i}")
+                (f"loket{i}", generate_password_hash("sensus3578"), "interviewer", i, f"Pewawancara Loket {i}")
+            )
+    else:
+        # Update existing loket passwords to "sensus3578"
+        new_hash = generate_password_hash("sensus3578")
+        for i in range(1, 26):
+            cursor.execute(
+                "UPDATE users SET password_hash=? WHERE username=? AND role='interviewer'",
+                (new_hash, f"loket{i}")
             )
 
     conn.commit()
@@ -487,12 +495,12 @@ def api_admin_data():
     if search:
         search_param = f"%{search}%"
         cursor.execute(
-            "SELECT COUNT(*) FROM antrian WHERE nama LIKE ? OR CAST(no_antrian AS TEXT) LIKE ? OR telepon LIKE ? OR email LIKE ?",
+            "SELECT COUNT(*) FROM antrian WHERE nama LIKE ? OR CAST(no_antrian AS TEXT) LIKE ? OR telepon LIKE ? OR CAST(id_sobat AS TEXT) LIKE ?",
             (search_param, search_param, search_param, search_param)
         )
         total_filtered = cursor.fetchone()[0]
         cursor.execute(
-            "SELECT * FROM antrian WHERE nama LIKE ? OR CAST(no_antrian AS TEXT) LIKE ? OR telepon LIKE ? OR email LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?",
+            "SELECT * FROM antrian WHERE nama LIKE ? OR CAST(no_antrian AS TEXT) LIKE ? OR telepon LIKE ? OR CAST(id_sobat AS TEXT) LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?",
             (search_param, search_param, search_param, search_param, per_page, offset)
         )
     else:

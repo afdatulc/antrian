@@ -25,20 +25,13 @@ body {
     position: absolute;
     border-radius: 50%;
     background: rgba(59, 130, 246, 0.1);
-    animation: float-particle 20s infinite;
+    opacity: 0.3;
 }
 
-.particle:nth-child(1) { width: 300px; height: 300px; top: -100px; left: -50px; animation-delay: 0s; }
-.particle:nth-child(2) { width: 200px; height: 200px; top: 50%; right: -80px; animation-delay: -5s; background: rgba(129, 140, 248, 0.08); }
-.particle:nth-child(3) { width: 150px; height: 150px; bottom: -50px; left: 30%; animation-delay: -10s; background: rgba(52, 211, 153, 0.08); }
-.particle:nth-child(4) { width: 250px; height: 250px; top: 20%; left: 60%; animation-delay: -15s; background: rgba(251, 191, 36, 0.06); }
-
-@keyframes float-particle {
-    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
-    25% { transform: translate(30px, -40px) scale(1.1); opacity: 0.5; }
-    50% { transform: translate(-20px, 20px) scale(0.9); opacity: 0.4; }
-    75% { transform: translate(40px, 30px) scale(1.05); opacity: 0.3; }
-}
+.particle:nth-child(1) { width: 300px; height: 300px; top: -100px; left: -50px; }
+.particle:nth-child(2) { width: 200px; height: 200px; top: 50%; right: -80px; background: rgba(129, 140, 248, 0.08); }
+.particle:nth-child(3) { width: 150px; height: 150px; bottom: -50px; left: 30%; background: rgba(52, 211, 153, 0.08); }
+.particle:nth-child(4) { width: 250px; height: 250px; top: 20%; left: 60%; background: rgba(251, 191, 36, 0.06); }
 
 .container {
     position: relative;
@@ -154,12 +147,7 @@ body {
 }
 
 .loket-card.calling {
-    animation: pulse-glow 2s infinite;
-}
-
-@keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.15); }
-    50% { box-shadow: 0 0 50px rgba(59, 130, 246, 0.3), 0 0 80px rgba(59, 130, 246, 0.15); }
+    box-shadow: 0 0 50px rgba(59, 130, 246, 0.3), 0 0 80px rgba(59, 130, 246, 0.15);
 }
 
 .loket-label {
@@ -299,13 +287,6 @@ body {
     margin-bottom: 6px;
     background: rgba(59, 130, 246, 0.05);
     border: 1px solid rgba(59, 130, 246, 0.1);
-    transition: all 0.3s ease;
-    animation: slide-in 0.4s ease;
-}
-
-@keyframes slide-in {
-    from { opacity: 0; transform: translateX(20px); }
-    to { opacity: 1; transform: translateX(0); }
 }
 
 .waiting-item:first-child {
@@ -395,12 +376,6 @@ body {
 .footer-bar .running-text {
     font-size: 0.8rem;
     color: rgba(26, 26, 46, 0.4);
-    animation: marquee 20s linear infinite;
-}
-
-@keyframes marquee {
-    0% { transform: translateX(100vw); }
-    100% { transform: translateX(-100%); }
 }
 
 .nav-links {
